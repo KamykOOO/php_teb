@@ -13,12 +13,23 @@ $action = $_GET['action'] ?? DEAFULT_ACTION;
 $vievParams = [];
 
 if ($action === 'create') {
-    $vievParams['resultCreate'] = 'Tworzymy nową notatkę';
+    $page = 'create';
+    $created = false;
+
+    if (!empty($_POST)) {
+        $vievParams = [
+            'title' => $_POST['title'],
+            'description' => $_POST['description'],
+        ];
+        $created = true;
+    }
+    $vievParams['created'] = $created;
 } else {
+    $page = 'list';
     $vievParams['resultList'] = 'Wyświetlamy listę notatek';
 }
 
 
 
 $view = new View();
-$view->render($action, $vievParams);
+$view->render($page, $vievParams);
