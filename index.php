@@ -12,7 +12,28 @@ $action = $_GET['action'] ?? DEAFULT_ACTION;
 
 $vievParams = [];
 
-if ($action === 'create') {
+switch ($action) {
+    case 'create':
+        $page = 'create';
+        $created = false;
+
+        if (!empty($_POST)) {
+            $vievParams = [
+                'title' => $_POST['title'],
+                'description' => $_POST['description'],
+            ];
+            $created = true;
+        }
+        $vievParams['created'] = $created;
+        break;
+
+    default:
+        $page = 'list';
+        $vievParams['resultList'] = 'Wyświetlamy listę notatek';
+        break;
+}
+
+/* if ($action === 'create') {
     $page = 'create';
     $created = false;
 
@@ -28,7 +49,7 @@ if ($action === 'create') {
     $page = 'list';
     $vievParams['resultList'] = 'Wyświetlamy listę notatek';
 }
-
+ */
 
 
 $view = new View();
