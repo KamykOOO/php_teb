@@ -7,7 +7,18 @@ namespace App;
 include_once('./src/View.php');
 include_once('./src/utils/debug.php');
 
-$action = $_GET['action'] ?? null;
+const DEAFULT_ACTION = 'list';
+$action = $_GET['action'] ?? DEAFULT_ACTION;
+
+$vievParams = [];
+
+if ($action === 'create') {
+    $vievParams['resultCreate'] = 'Tworzymy nową notatkę';
+} else {
+    $vievParams['resultList'] = 'Wyświetlamy listę notatek';
+}
+
+
 
 $view = new View();
-$view->render($action);
+$view->render($action, $vievParams);
