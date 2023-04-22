@@ -18,10 +18,11 @@ class Controller
 
     public function __construct(array $getData, array $postData)
     {
-        $this->$getData = $getData;
-        $this->$postData = $postData;
+        $this->getData = $getData;
+        $this->postData = $postData;
         $db = new database(self::$configuration);
     }
+
 
     public static function initConfiguration(array $configuration): void
     {
