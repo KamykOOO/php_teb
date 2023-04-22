@@ -11,16 +11,16 @@ require_once('./src/Database.php');
 class Controller
 {
     const DEAFULT_ACTION = 'list';
-
-    private array $getData;
-    private array $postData;
+    private array $request;
     private static $configuration = [];
     private Database $database;
+    private View $view;
 
-    public function __construct(array $getData, array $postData)
+
+    public function __construct(array $request)
     {
-        $this->getData = $getData;
-        $this->postData = $postData;
+        $this->request = $request;
+        $this->view = new View();
         $this->database = new Database(self::$configuration);
     }
 
@@ -32,24 +32,20 @@ class Controller
 
     public function run(): void
     {
-        $action = $_GET['action'] ?? self::DEAFULT_ACTION;
-        $view = new View();
-
         $vievParams = [];
 
-        switch ($action) {
+        switch ($this->action()) {
             case 'create':
                 $page = 'create';
                 $created = false;
-
-                if (!empty($this->postData)) {
+                $data = $this->getRequestPost();
+                if (!empty($data)) {
                     $vievParams = [
-                        'title' => $this->postData['title'],
-                        'description' => $this->postData['description'],
+                        'title' => $data['title'],
+                        'description' => $data['description'],
                     ];
-                    header('Location: /');
-                    $created = true;
                     $this->database->createNote($vievParams);
+                    header('Location: /');
                 }
                 $vievParams['created'] = $created;
                 break;
@@ -60,6 +56,19 @@ class Controller
                 break;
         }
 
-        $view->render($page, $vievParams);
+        $this->view->render($page, $vievParams);
+    }
+    private function action(): string
+    {
+        $data = $this->getRequestGet();
+        return $data['action'] ?? self::DEAFULT_ACTION;
+    }
+    private function getRequestPost(): array
+    {
+        return $this->request['post'] ?? [];
+    }
+    private function getRequestGet(): array
+    {
+        return $this->request['get'] ?? [];
     }
 }
