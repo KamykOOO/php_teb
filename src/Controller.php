@@ -8,6 +8,8 @@ include_once('./src/View.php');
 require_once('./config/config.php');
 require_once('./src/Database.php');
 
+use App\Exception\NotFoundException;
+
 class Controller
 {
     const DEAFULT_ACTION = 'list';
@@ -46,8 +48,26 @@ class Controller
                     ];
                     $this->database->createNote($noteData);
                     header('Location: /?before=created');
+                    exit;
+                }
+                break;
+            case 'show':
+                $page = 'show';
+                $data = $this->getRequestGet();
+                $noteId = (int) $data['id'] ?? null;
+                if (!$noteId) {
+                    header('Location: /?error=missingNoteId');
+                    exit;
                 }
 
+                try {
+                    $note = $this->database->getNote($noteId);
+                } catch (NotFoundException $e) {
+                    header('Location: /?error=noteNotFound');
+                }
+                $vievParams = [
+                    'note' => $note,
+                ];
                 break;
 
             default:
@@ -56,6 +76,7 @@ class Controller
                 $vievParams = [
                     'notes' => $this->database->getNotes(),
                     'before' => $data['before'] ?? null,
+                    'error' => $data['error'] ?? null,
                 ];
                 break;
         }
