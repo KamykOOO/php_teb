@@ -53,7 +53,10 @@ class Controller
             default:
                 $page = 'list';
                 $data = $this->getRequestGet();
-                $vievParams['before'] = $data['before'] ?? null;
+                $vievParams = [
+                    'notes' => $this->database->getNotes(),
+                    'before' => $data['before'] ?? null,
+                ];
                 break;
         }
 
