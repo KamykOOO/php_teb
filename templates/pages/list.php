@@ -25,6 +25,12 @@
                         case 'created':
                             echo 'Notatka została utworzona!';
                             break;
+                        case 'edited';
+                            echo 'Notatka została zaktualizowana!';
+                            break;
+                            case 'deleted';
+                            echo 'Notatka została usunięta!';
+                            break;
                     }
                 }
                 ?>
@@ -45,12 +51,13 @@
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tbody>
                         <?php foreach ($params['notes'] ?? [] as $note) : ?>
-                            <tr>
-                                <td><?php echo $note['id'] ?></td>
-                                <td><?php echo $note['title'] ?></td>
-                                <td><?php echo $note['created'] ?></td>
-                                <td><a href="/?action=show&id=<?php echo (int) $note['id'] ?>>">Opcje</a></td>
-                            </tr>
+                        <tr>
+                            <td><?php echo $note['id'] ?></td>
+                            <td><?php echo $note['title'] ?></td>
+                            <td><?php echo $note['created'] ?></td>
+                            <td><a href="/?action=show&id=<?php echo (int) $note['id'] ?>>">Opcje</a></td>
+                            <td><a href="/?action=delete$id=<?php echo (int) $note['id']?>">Usuń</a></td>
+                        </tr>
                         <?php endforeach; ?>
                     <tbody>
                 </table>

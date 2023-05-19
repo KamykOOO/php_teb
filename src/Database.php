@@ -67,6 +67,20 @@ class database
         }
     }
 
+    public function editNote(int $id, array $data)
+    {
+        try {
+            $title = $this->conn->quote($data['title']);
+            $description = $this->conn->quote($data['description']);
+
+            $query = "UPDATE notes SET title=$title, description=$description where id=$id";
+
+            $this->conn->exec($query);
+        } catch (Throwable $e) {
+            throw new StorageException('Nie udało się odytować notatki', 400, $e);
+        }
+    }
+
     private function createConnection(array $config): void
     {
         $dsn = "mysql:dbname={$config['database']};
@@ -81,7 +95,15 @@ class database
         );
     }
 
-
+    public function deleteNote($id): void
+    {
+        try {
+            $query = "DELETE FROM notes WHERE id=$id LIMIT 1";
+            $this->conn->exec($query);
+        } catch (Throwable $e) {
+            throw new StorageException("Nie udało się usunac notatki", 400, $e);
+        }
+    }
 
     private function validateConfig(array $config): void
     {
